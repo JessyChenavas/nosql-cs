@@ -1,0 +1,29 @@
+<div mat-dialog-content>
+  <div *ngIf="loading" class="d-flex flex-column text-center">
+    <h1>Traitement de votre requête en cours ...</h1>
+    <mat-spinner class="m-auto"></mat-spinner>
+  </div>
+
+
+  <div *ngIf="success" class="text-center">
+    <h1>Requête executée avec succès</h1>
+    <svg class="w-25" fill="none" stroke="green" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+
+    <h2>Temps de réponse {{response.executionTime}} s</h2>
+  </div>
+
+  <div *ngIf="error" class="text-center">
+    <h1>Erreur lors de l'éxecution de la requête</h1>
+    <svg class="w-25" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+         stroke="red" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+  </div>
+
+
+
+</div>
+<div mat-dialog-actions class="justify-content-end">
+  <button mat-button mat-dialog-close>Fermer</button>
+</div>

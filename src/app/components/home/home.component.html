@@ -1,0 +1,199 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>home</mat-icon>
+  </button>
+  <span>TP SQL</span>
+  <button mat-button [routerLink]="'/'">Home</button>
+  <button mat-button [routerLink]="'/request'">Requêtage</button>
+
+</mat-toolbar>
+
+<div class="container flex-col mt-3">
+  <div class="w-100 justify-content-center text-center">
+    <div class="d-flex flex-gap justify-content-center">
+      <button mat-raised-button class="data-source-button mat-elevation-z4 mb-3 px-5 py-2"
+              (click)="setDataSource(dataSources.nosql)"
+              color="{{currentDataSource == dataSources.nosql ? 'primary' : 'default'}}">
+        NoSQL
+      </button>
+      <button mat-raised-button class="data-source-button mat-elevation-z4 mb-3 px-5 py-2"
+              (click)="setDataSource(dataSources.sql)"
+              color="{{currentDataSource == dataSources.sql ? 'primary' : 'default'}}">
+        MySQL
+      </button>
+    </div>
+  </div>
+
+
+  <div class="flex-gap d-flex flex-row">
+    <div class="card mat-elevation-z8 d-flex flex-grow-1 p-4">
+      <div class="d-flex flex-row align-items-center">
+        <h1 class="mr-2">Insertion des</h1>
+        <mat-form-field appearance="fill">
+          <mat-label>Type de données</mat-label>
+          <mat-select [(value)]="currentInsertTab">
+            <mat-option *ngFor="let item of tabs | keyvalue" [value]="item.value">
+              {{item.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!--<button mat-raised-button class="data-source-button mat-elevation-z4"
+              color="{{currentInsertTab == tabs.PERSONS ? 'primary' : 'default'}}">
+        Personnes
+      </button>
+      <button mat-raised-button class="data-source-button mat-elevation-z4"
+              color="{{currentInsertTab == tabs.PRODUCTS ? 'primary' : 'default'}}">
+        Produits
+      </button>
+      <button mat-raised-button class="data-source-button mat-elevation-z4"
+              color="{{currentInsertTab == tabs.FRIENDS ? 'primary' : 'default'}}">
+        Amis
+      </button>
+      <button mat-raised-button class="data-source-button mat-elevation-z4"
+              color="{{currentInsertTab == tabs.PURCHASES ? 'primary' : 'default'}}">
+        Achats
+      </button>-->
+
+      <div *ngIf="currentInsertTab === tabs.persons" [formGroup]="personsForm"
+           class="d-flex flex-column w-100 text-center">
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre de personnes</mat-label>
+          <input matInput placeholder="Nombre de personnes" formControlName="number" autocomplete="off"/>
+          <mat-error *ngIf="personsForm.get('number').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Taille de batch</mat-label>
+          <input matInput placeholder="Batch size" formControlName="batchSize" autocomplete="off"/>
+          <mat-error *ngIf="personsForm.get('batchSize').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button class="data-source-button mat-elevation-z4 px-5 py-2"
+                (click)="insertPersons()"
+                color="primary">
+          Insérer les personnes
+        </button>
+      </div>
+
+      <div *ngIf="currentInsertTab && currentInsertTab === tabs.products" [formGroup]="productForm"
+           class="d-flex flex-column w-100 text-center">
+
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre de produits</mat-label>
+          <input matInput type="number" placeholder="Nombre de produits" formControlName="number" autocomplete="off"/>
+          <mat-error *ngIf="productForm.get('number').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button class="data-source-button mat-elevation-z4 px-5 py-2"
+                (click)="insertProducts()"
+                color="primary">
+          Insérer les produits
+        </button>
+      </div>
+
+      <div *ngIf="currentInsertTab === tabs.friends" [formGroup]="friendsOrPurchaseForm"
+           class="d-flex flex-column w-100 text-center">
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre minimum de followers par personne</mat-label>
+          <input matInput placeholder="Nombre minimum d'amis par personne" formControlName="min" autocomplete="off"/>
+          <mat-error *ngIf="friendsOrPurchaseForm.get('min').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre maximum de followers par personne</mat-label>
+          <input matInput placeholder="Nombre maximum d'amis par personne" formControlName="max" autocomplete="off"/>
+          <mat-error *ngIf="friendsOrPurchaseForm.get('max').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Taille de batch</mat-label>
+          <input matInput placeholder="Batch size" formControlName="batchSize" autocomplete="off"/>
+          <mat-error *ngIf="friendsOrPurchaseForm.get('batchSize').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button class="data-source-button mat-elevation-z4 px-5 py-2"
+                (click)="insertFriends()"
+                color="primary">
+          Insérer les followers
+        </button>
+      </div>
+
+      <div *ngIf="currentInsertTab === tabs.purchases" [formGroup]="friendsOrPurchaseForm"
+           class="d-flex flex-column w-100 text-center">
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre minimum d'achats par personne</mat-label>
+          <input matInput placeholder="Nombre minimum d'achats par personne" formControlName="min" autocomplete="off"/>
+          <mat-error *ngIf="friendsOrPurchaseForm.get('min').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre maximum d'achats par personne</mat-label>
+          <input matInput placeholder="Nombre maximum d'achats par personne" formControlName="max" autocomplete="off"/>
+          <mat-error *ngIf="friendsOrPurchaseForm.get('max').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Taille de batch</mat-label>
+          <input matInput placeholder="Batch size" formControlName="batchSize" autocomplete="off"/>
+          <mat-error *ngIf="friendsOrPurchaseForm.get('batchSize').invalid">
+            Ce champ est requis.
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button class="data-source-button mat-elevation-z4 px-5 py-2"
+                (click)="insertPurchases()"
+                color="primary">
+          Insérer les achats
+        </button>
+      </div>
+
+    </div>
+
+
+    <div class="card mat-elevation-z8 d-flex w-30 p-4">
+      <div class="d-flex flex-row align-items-center">
+        <h1 class="mr-2">Statut de la base de donnée</h1>
+      </div>
+      <div *ngIf="databaseStatus" class="d-flex flex-column database-status">
+        <h2>Personnes: <span>{{databaseStatus.personsNumber}}</span></h2>
+        <h2>Produits: <span>{{databaseStatus.productsNumber}}</span></h2>
+        <h2>Followers: <span>{{databaseStatus.friendsNumber}}</span></h2>
+        <h2>Achats: <span>{{databaseStatus.purchasesNumber}}</span></h2>
+      </div>
+    </div>
+  </div>
+  <div class="card mat-elevation-z8">
+    <button mat-raised-button class="data-source-button mat-elevation-z4 m-2 px-5 py-2"
+            (click)="reset()"
+            color="accent">
+      Réinitialiser la base
+    </button>
+  </div>
+  <!--<div class="card mat-elevation-z8">
+    <span *ngFor="appState.responses">
+      Test
+    </span>
+  </div>-->
+
+</div>
