@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DatabaseStatus } from '../model/DatabaseStatus';
 
@@ -21,10 +21,13 @@ export class AbstractRestService {
       .set('number', nbPerson.toString())
       .set('batchSize', batchSize.toString());
 
+    const headers: HttpHeaders = new HttpHeaders().append('Content-Type', 'application/x-www-form-urlencoded');
+
     return this.http.post<any>(
       this.uri.concat('/insert/persons'),
       {}, {
-        params
+        params,
+        headers
       }
     );
   }
@@ -46,11 +49,13 @@ export class AbstractRestService {
       .set('min', min.toString())
       .set('max', max.toString())
       .set('batchSize', batchSize.toString());
-
+    
+    const headers = new HttpHeaders({'Content-Type': 'application/json', 'Keep-Alive': 'timeout=1200'});
     return this.http.post<any>(
       this.uri.concat('/insert/friends'),
       {}, {
-        params
+        params,
+        headers
       }
     );
   }

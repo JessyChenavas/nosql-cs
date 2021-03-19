@@ -20,6 +20,7 @@ export class DialogComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("Subscribe to obs");
+
     this.data.observable.subscribe((res: Response) => {
       this.loading = false;
       this.success = true;
